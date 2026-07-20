@@ -1,0 +1,96 @@
+#+title: modus-solarized
+
+Solarized Light／Dark の16色パレットを、~modus-themes~ の派生テーマ API
+で実装した Emacs テーマパッケージです。パッケージ名は
+~modus-solarized~、テーマ名は ~modus-solarized-light~ と
+~modus-solarized-dark~ です。
+
+Modus Themes が対応する幅広い face を利用しつつ、自動生成される色も含めて
+Solarized の正規16色だけを使用します。Light は ~base3~、Dark は
+~base03~ を通常背景にします。Org のソースブロックや差分の背景も通常背景を
+維持し、追加・変更・削除は Solarized アクセントの文字色で表現します。
+範囲選択は各テーマの通常の文字色と背景色を反転します。外部パッケージ固有の
+face 上書きはありません。
+
+* 必要環境
+
+- Emacs 28.1 以降
+- modus-themes 5.0.0 以降
+
+* インストール
+
+このディレクトリを ~load-path~ と ~custom-theme-load-path~ に追加します。
+
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "/path/to/modus-solarized")
+  (add-to-list 'custom-theme-load-path "/path/to/modus-solarized")
+
+  (require 'modus-solarized)
+  (load-theme 'modus-solarized-light t) ; または modus-solarized-dark
+#+end_src
+
+~use-package~ では次のように設定できます。
+
+#+begin_src emacs-lisp
+  (use-package modus-solarized
+    :load-path "~/.emacs.d/lisp/modus-solarized/"
+    :custom
+    (modus-solarized-color-remaps
+     '((green . yellow)
+       (cyan . yellow)))
+    :config
+    (load-theme 'modus-solarized-light t)
+    (modus-solarized-refresh))
+#+end_src
+
+Dark を使用する場合は読み込むテーマだけを変更します。
+
+#+begin_src emacs-lisp
+  (load-theme 'modus-solarized-dark t)
+#+end_src
+
+* カスタマイズ
+
+Solarized の8アクセント色は、~modus-solarized-color-remaps~ で Light／Dark
+共通に差し替えたり相互交換したりできます。
+
+#+begin_src emacs-lisp
+  (setq modus-solarized-color-remaps
+        '((red . blue)
+          (blue . red)
+          (green . yellow)))
+#+end_src
+
+使用できる名前は ~red~、~orange~、~yellow~、~green~、~cyan~、~blue~、
+~violet~、~magenta~ です。設定から組を削除すると元の色へ戻ります。
+実行中に変更した場合は ~M-x modus-solarized-refresh~ を実行してください。
+
+~green-warmer~ や ~green-cooler~ などの Modus 派生色も元の色ファミリーと
+一緒に変更されます。コメント、docstring、doc markup はリマップ対象外で、
+Light は ~base1~、Dark は ~base01~ を使用します。
+
+~modus-solarized-palette-overrides~ では、両テーマ共通の Modus パレット項目を
+上書きできます。
+
+#+begin_src emacs-lisp
+  (setq modus-solarized-palette-overrides
+        '((cursor violet)
+          (bg-hl-line bg-alt)))
+  (modus-solarized-refresh)
+#+end_src
+
+* テスト
+
+#+begin_src sh
+  make test
+#+end_src
+
+* クレジット
+
+- Solarized の配色は Ethan Schoonover によるものです。
+- テーマエンジンと face 対応は Protesilaos Stavrou による
+  ~modus-themes~ を利用しています。
+
+* License
+
+MIT License。詳細は [[file:LICENSE][LICENSE]] を参照してください。
