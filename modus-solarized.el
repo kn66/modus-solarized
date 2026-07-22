@@ -174,6 +174,23 @@
     (docmarkup fg-alt)
     (bg-hl-line bg-dim)
     (bg-paren-match bg-dim)
+    ;; Search matches need colored backgrounds so hits remain easy to locate.
+    (bg-search-current yellow)
+    (fg-search-current bg-main)
+    (bg-search-lazy cyan)
+    (fg-search-lazy bg-main)
+    (bg-search-static magenta)
+    (fg-search-static bg-main)
+    (bg-search-replace red)
+    (fg-search-replace bg-main)
+    (bg-search-rx-group-0 blue)
+    (fg-search-rx-group-0 bg-main)
+    (bg-search-rx-group-1 green)
+    (fg-search-rx-group-1 bg-main)
+    (bg-search-rx-group-2 red)
+    (fg-search-rx-group-2 bg-main)
+    (bg-search-rx-group-3 magenta)
+    (fg-search-rx-group-3 bg-main)
     (bg-completion bg-dim)
     (bg-hover bg-dim)
     (bg-hover-secondary bg-dim)
@@ -364,14 +381,14 @@ and VALUE is another palette symbol or a color string."
     (unless spec
       (error "Unknown Modus Solarized theme: %S" theme))
     (let* (
-         (mode (nth 1 spec))
-         (palette-symbol (nth 2 spec))
-         (description (nth 3 spec))
-         (palette (symbol-value palette-symbol))
-         (region-background
-          (modus-solarized--resolve-color 'fg-main palette))
-         (region-foreground
-          (modus-solarized--resolve-color 'bg-main palette)))
+           (mode (nth 1 spec))
+           (palette-symbol (nth 2 spec))
+           (description (nth 3 spec))
+           (palette (symbol-value palette-symbol))
+           (region-background
+            (modus-solarized--resolve-color 'fg-main palette))
+           (region-foreground
+            (modus-solarized--resolve-color 'bg-main palette)))
       (modus-solarized--ensure-theme-metadata theme)
       (put theme 'theme-settings nil)
       (apply
@@ -379,8 +396,10 @@ and VALUE is another palette symbol or a color string."
        theme
        (modus-solarized--face-specs
         modus-solarized-inverted-region-faces
-        `(:background ,region-background :foreground ,region-foreground
-          :underline nil :box nil)))
+        `( :background ,region-background
+           :foreground ,region-foreground
+           :underline nil
+           :box nil)))
       (modus-themes-theme
        theme
        modus-solarized-theme-family

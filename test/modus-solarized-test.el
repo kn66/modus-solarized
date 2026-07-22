@@ -41,9 +41,11 @@
 
 (ert-deftest modus-solarized-test-metadata ()
   "Both themes have the expected Modus metadata."
-  (dolist (case '((modus-solarized-light light
+  (dolist (case '((modus-solarized-light
+                   light
                    modus-solarized-light-palette)
-                  (modus-solarized-dark dark
+                  (modus-solarized-dark
+                   dark
                    modus-solarized-dark-palette)))
     (let ((properties (get (car case) 'theme-properties)))
       (should (eq (plist-get properties :background-mode) (nth 1 case)))
@@ -94,14 +96,47 @@
   "Org blocks and semantic surfaces use neutral backgrounds."
   (dolist (case '((modus-solarized-light "#FDF6E3" "#EEE8D5")
                   (modus-solarized-dark "#002B36" "#073642")))
-    (dolist (role '(bg-prose-block-delimiter bg-prose-block-contents
-                    bg-added-refine bg-removed-refine bg-changed-refine))
+    (dolist (role '(bg-prose-block-delimiter
+                    bg-prose-block-contents
+                    bg-added-refine
+                    bg-removed-refine
+                    bg-changed-refine))
       (should (equal (modus-solarized-test--resolve-color (car case) role)
                      (nth 1 case))))
-    (dolist (role '(bg-hl-line bg-completion bg-hover
-                    bg-hover-secondary bg-diff-context))
+    (dolist (role '(bg-hl-line
+                    bg-completion
+                    bg-hover
+                    bg-hover-secondary
+                    bg-diff-context))
       (should (equal (modus-solarized-test--resolve-color (car case) role)
                      (nth 2 case))))))
+
+(ert-deftest modus-solarized-test-search-matches-use-backgrounds ()
+  "Search matches use Solarized backgrounds with the normal background text."
+  (dolist (theme '(modus-solarized-light modus-solarized-dark))
+    (dolist (case '((bg-search-current "#B58900")
+                    (bg-search-lazy "#2AA198")
+                    (bg-search-static "#D33682")
+                    (bg-search-replace "#DC322F")
+                    (bg-search-rx-group-0 "#268BD2")
+                    (bg-search-rx-group-1 "#859900")
+                    (bg-search-rx-group-2 "#DC322F")
+                    (bg-search-rx-group-3 "#D33682")))
+      (let ((background-role (nth 0 case))
+            (expected-background (nth 1 case))
+            (foreground-role
+             (intern (replace-regexp-in-string
+                      "^bg-" "fg-" (symbol-name (nth 0 case))))))
+        (should (equal (modus-solarized-test--resolve-color
+                        theme background-role)
+                       expected-background))
+        (should (equal (modus-solarized-test--resolve-color
+                        theme foreground-role)
+                       (modus-solarized-test--resolve-color
+                        theme 'bg-main)))
+        (should-not (equal expected-background
+                           (modus-solarized-test--resolve-color
+                            theme 'bg-main)))))))
 
 (ert-deftest modus-solarized-test-diff-foregrounds ()
   "Diff meaning remains visible through Solarized accent foregrounds."
