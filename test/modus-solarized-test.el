@@ -73,6 +73,25 @@
     (should (equal (modus-solarized-test--resolve-color (car case) 'bg-dim)
                    (nth 3 case)))))
 
+(ert-deftest modus-solarized-test-outer-borders-match-main-foreground ()
+  "Popup and child-frame borders use the normal text color."
+  (dolist (theme '(modus-solarized-light modus-solarized-dark))
+    (let ((foreground
+           (modus-solarized-test--resolve-color theme 'fg-main)))
+      (should (equal (modus-solarized-test--resolve-color theme 'border)
+                     foreground))
+      (dolist (face '(corfu-border
+                      child-frame-border
+                      eldoc-box-border
+                      ivy-posframe-border
+                      quick-peek-border-face))
+        (should
+         (equal
+          (plist-get
+           (modus-solarized-test--face-attributes theme face)
+           :background)
+          foreground))))))
+
 (ert-deftest modus-solarized-test-regions-are-inverted ()
   "Range selections invert each theme's normal colors."
   (dolist (case '((modus-solarized-light "#657B83" "#FDF6E3")

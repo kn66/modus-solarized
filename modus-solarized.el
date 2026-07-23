@@ -152,7 +152,7 @@
     (fg-main "#657B83")
     (fg-dim "#839496")
     (fg-alt "#93A1A1")
-    (border "#93A1A1"))
+    (border fg-main))
   "Neutral roles for Solarized Light.")
 
 (defconst modus-solarized-dark-neutral-palette
@@ -164,7 +164,7 @@
     (fg-main "#839496")
     (fg-dim "#657B83")
     (fg-alt "#586E75")
-    (border "#586E75"))
+    (border fg-main))
   "Neutral roles for Solarized Dark.")
 
 (defconst modus-solarized-palette-mappings
@@ -206,6 +206,11 @@
 (defconst modus-solarized-inverted-region-faces
   '(region secondary-selection rectangle-preview)
   "Standard range-selection faces that invert normal colors.")
+
+(defconst modus-solarized-custom-faces
+  '(
+    `(corfu-border ((,c :background ,fg-main))))
+  "Face definitions shared by both Modus Solarized themes.")
 
 (defconst modus-solarized-accent-colors
   '((red . "#DC322F")
@@ -407,7 +412,8 @@ and VALUE is another palette symbol or a color string."
        mode
        palette-symbol
        nil
-       'modus-solarized-palette-overrides))))
+       'modus-solarized-palette-overrides
+       'modus-solarized-custom-faces))))
 
 (defun modus-solarized-refresh ()
   "Rebuild and reapply enabled Modus Solarized themes."
